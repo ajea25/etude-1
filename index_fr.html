@@ -1,0 +1,4718 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Détection de Douleur</title>
+  <script src="https://unpkg.com/jspsych@7.3.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-image-keyboard-response"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-preload"></script>
+  <link href="https://unpkg.com/jspsych@7.3.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+</head>
+<body style="background-color:black; color:white;">
+<style>img { max-height: 80vh; height: auto; width: auto; }</style>
+<script>
+const jsPsych = initJsPsych({
+    on_finish: () => {
+        jsPsych.data.get().localSave('csv','resultats_douleur.csv');
+    }
+});
+const timeline = [];
+
+// Instructions
+timeline.push({
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: `<p>Un visage va être présenté.<br><br>
+               Après l'apparition du visage, vous devrez indiquer si le visage présentait l'émotion de douleur (oui ou non).<br><br>
+               Répondez "Non" avec la touche S et "Oui" avec la touche L.<br><br>
+               Avant de débuter, les visages sans émotion (neutres) vous sont présentés.<br><br>
+               Appuyez sur la barre d'espace pour débuter.</p>`,
+    choices: [' ']
+});
+
+// Pré-exposition visages neutres
+let neutralImages = [
+"stimuli/neutre_identity_15_n-identity15.jpg",
+"stimuli/neutre_identity_2_n-identity2.jpg",
+"stimuli/neutre_identity_1_n-identity1.jpg",
+"stimuli/neutre_identity_3_n-identity3.jpg",
+"stimuli/neutre_identity_6_n-identity6.jpg",
+"stimuli/neutre_identity_4_n-identity4.jpg",
+"stimuli/neutre_identity_12_n-identity12.jpg",
+"stimuli/neutre_identity_13_n-identity13.jpg",
+"stimuli/neutre_identity_11_n-identity11.jpg",
+"stimuli/neutre_identity_10_n-identity10.jpg",
+"stimuli/neutre_identity_14_n-identity14.jpg",
+"stimuli/neutre_identity_5_n-identity5.jpg",
+"stimuli/neutre_identity_7_n-identity7.jpg",
+"stimuli/neutre_identity_16_n-identity16.jpg",
+"stimuli/neutre_identity_9_n-identity9.jpg",
+"stimuli/neutre_identity_8_n-identity8.jpg"
+];
+neutralImages.forEach(img => {
+    timeline.push({
+        type: jsPsychImageKeyboardResponse,
+        stimulus: img,
+        choices: "NO_KEYS",
+        trial_duration: 2000
+    });
+});
+timeline.push({
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "<p>Appuyez sur la barre d'espace pour commencer l'expérience principale.</p>",
+    choices: [' ']
+});
+const mainTrials = [
+
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_11_80pain-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_10_80pain-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_8_80pain-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_12_n-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_9_n-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_15_n-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_6_n-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_12_80pain-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_1_80pain-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_16_80pain-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_1_n-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_8_n-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_5_n-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_13_80pain-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_9_80pain-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_4_n-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_9_n-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_1_80pain-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_12_80pain-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_12_n-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_3_80pain-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_8_80pain-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_7_n-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_6_n-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_14_80pain-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_10_n-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_4_n-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_14_n-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_16_n-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_11_80pain-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_8_n-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_6_80pain-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_10_80pain-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_3_n-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_4_n-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_7_80pain-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_9_n-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_10_n-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_11_n-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_14_80pain-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_7_80pain-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_7_n-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_10_n-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_7_80pain-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_3_80pain-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_1_80pain-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_6_80pain-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_11_n-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_9_n-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_2_80pain-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_16_n-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_7_n-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_8_80pain-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_5_n-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_15_n-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_2_n-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_9_n-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_9_n-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_15_80pain-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_8_80pain-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_6_80pain-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_11_n-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_6_n-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_5_80pain-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_11_n-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_2_80pain-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_11_n-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_11_n-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_13_n-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_10_80pain-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_15_80pain-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_15_80pain-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_15_80pain-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_4_80pain-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_9_80pain-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_2_n-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_14_80pain-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_16_n-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_13_80pain-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_16_80pain-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_15_n-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_12_80pain-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_5_80pain-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_14_n-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_7_n-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_5_n-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_4_80pain-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_6_n-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_1_80pain-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_1_80pain-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "1",
+            image: "emotion_identity_1_80pain-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_2_n-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_4_80pain-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_13_n-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_9_80pain-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_3_80pain-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_6_80pain-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_13_80pain-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_15_n-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_1_n-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_5_80pain-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_10_80pain-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_7_n-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_7_n-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_4_80pain-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_12_80pain-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_14_80pain-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_1_n-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_9_80pain-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_15_n-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_15_n-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_6_n-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_6_n-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_10_80pain-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "10",
+            image: "emotion_identity_10_80pain-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_4_80pain-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "4",
+            image: "emotion_identity_4_80pain-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_11_80pain-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_11_80pain-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_1_n-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_13_n-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_14_n-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_13_80pain-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_14_n-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_5_n-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_2_80pain-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_3_n-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_14_80pain-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "14",
+            image: "emotion_identity_14_80pain-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_3_80pain-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_13_n-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_1_n-identity1.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_1_n-identity1.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_10_n-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_12_80pain-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "12",
+            image: "emotion_identity_12_80pain-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_7_80pain-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_5_80pain-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_16_80pain-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_5_80pain-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "5",
+            image: "emotion_identity_5_80pain-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_8_n-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_8_n-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_8_80pain-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "8",
+            image: "emotion_identity_8_80pain-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_2_80pain-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_2_n-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_2_80pain-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "2",
+            image: "emotion_identity_2_80pain-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_16_80pain-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_16_80pain-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "16",
+            image: "emotion_identity_16_80pain-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_16_n-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_9_80pain-identity9.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "9",
+            image: "emotion_identity_9_80pain-identity9.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_3_n-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_16_n-identity16.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_16_n-identity16.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_2_n-identity2.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_2_n-identity2.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_12_n-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_13_n-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_13_n-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_3_80pain-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "3",
+            image: "emotion_identity_3_80pain-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_12_n-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_14_n-identity14.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_14_n-identity14.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_4_n-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_12_n-identity12.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_12_n-identity12.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_5_n-identity5.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_5_n-identity5.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_3_n-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_3_n-identity3.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_3_n-identity3.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_13_80pain-identity13.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "13",
+            image: "emotion_identity_13_80pain-identity13.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_15_80pain-identity15.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "15",
+            image: "emotion_identity_15_80pain-identity15.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_11_80pain-identity11.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "11",
+            image: "emotion_identity_11_80pain-identity11.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_4_n-identity4.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_4_n-identity4.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_6_80pain-identity6.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "6",
+            image: "emotion_identity_6_80pain-identity6.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_8_n-identity8.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_8_n-identity8.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/neutre_identity_10_n-identity10.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "neutre",
+            intensity: "0",
+            image: "neutre_identity_10_n-identity10.jpg"
+        }
+    },
+    
+    {
+        type: jsPsychImageKeyboardResponse,
+        stimulus: "stimuli/emotion_identity_7_80pain-identity7.jpg",
+        choices: "NO_KEYS",
+        trial_duration: 2000,
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    {
+        type: jsPsychHtmlKeyboardResponse,
+        stimulus: "<p style='color:white'>Est-ce que le visage présentait l'expression faciale de douleur ?<br>(Non: S / Oui: L)</p>",
+        choices: ['s', 'l'],
+        autofocus: true,
+        on_finish: function(data) {
+            data.response_key = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press);
+            data.response = data.response_key === 'l' ? 'yes' : (data.response_key === 's' ? 'no' : 'unknown');
+            data.correct = (data.condition === 'emotion' && data.response === 'yes') ||
+                           (data.condition === 'neutre' && data.response === 'no');
+        },
+        data: {
+            condition: "emotion",
+            intensity: "7",
+            image: "emotion_identity_7_80pain-identity7.jpg"
+        }
+    },
+    
+];
+mainTrials.forEach(trial => timeline.push(trial));
+timeline.push({
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: "<p>Merci pour votre participation.</p><p>Vous pouvez maintenant fermer cette fenêtre.</p>",
+    choices: "NO_KEYS"
+});
+jsPsych.run(timeline);
+</script>
+</body>
+</html>
